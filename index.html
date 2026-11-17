@@ -4,75 +4,86 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Avaliação — MCCP na residência de MFC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <style>
 :root{
-  --bg:#f3f5f6; --card:#fff; --ink:#15303a; --ink2:#3b5560; --muted:#647a82; --line:#d5dfe3;
-  --petrol:#1d5261; --petrol-soft:#dcebef; --red:#b3261e; --red-soft:#fbe4e1; --amber:#8a5a00; --amber-soft:#fff2cc;
-  --green:#1f6f4a; --green-soft:#dcf0e5; --r:14px;
+  --paper:#f6f3ec; --card:#ffffff; --ink:#1d2624; --ink2:#3d4a47; --muted:#6b7672; --line:#d9d3c6; --rule:#1d2624;
+  --green:#22453c; --green-soft:#e4ece7; --terra:#b0532e; --gold:#d9a521;
+  --red:#9e2a1f; --red-soft:#f8e7e3; --amber:#7a5200; --amber-soft:#fbf1d6;
+  --serif-d:"Fraunces",Georgia,"Times New Roman",serif; --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
 }
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font:16.5px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+*{box-sizing:border-box;border-radius:0!important}
+html,body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.62 var(--serif)}
 body{min-height:100vh}
-h1,h2,h3{line-height:1.2;margin:0 0 .5em}
-h1{font-size:26px} h2{font-size:21px} h3{font-size:17px}
+h1,h2,h3{font-family:var(--serif-d);font-weight:600;line-height:1.15;margin:0 0 .5em;letter-spacing:-.005em}
+h1{font-size:34px} h2{font-size:23px} h3{font-size:19px}
 p{margin:0 0 .8em}
-.wrap{max-width:860px;margin:0 auto;padding:28px 20px 60px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px;margin-bottom:18px}
-.ref{font-size:14px;color:var(--muted)}
-.alerta{border:2px solid var(--red);background:var(--red-soft);border-radius:var(--r);padding:18px 20px;margin-bottom:18px}
-.alerta h2{color:var(--red);font-size:19px;display:flex;gap:10px;align-items:center}
+.wrap{max-width:880px;margin:0 auto;padding:32px 22px 70px}
+.card{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--rule);padding:28px 30px;margin-bottom:22px}
+.ref{font-size:15px;color:var(--muted);font-style:italic}
+.kicker{font-family:var(--serif-d);font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:8px}
+.capa{display:block;width:100%;height:auto;border:1px solid var(--line);margin-bottom:22px;background:#efe8d8}
+.alerta{border:1px solid var(--red);border-left:8px solid var(--red);background:var(--red-soft);padding:20px 24px;margin-bottom:22px}
+.alerta h2{color:var(--red);font-size:21px;display:flex;gap:10px;align-items:center}
 .alerta ul{margin:.4em 0 0;padding-left:1.2em}
-.alerta li{margin-bottom:.35em}
-label{display:block;font-weight:600;margin:12px 0 4px}
-input[type=text],input[type=email],select{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
-.termo{background:#fafbfb;border:1px solid var(--line);border-radius:10px;padding:14px 18px;font-size:15.5px}
+.alerta li{margin-bottom:.4em}
+label{display:block;font-family:var(--serif-d);font-weight:600;font-size:16px;margin:16px 0 6px}
+input[type=text],input[type=email],select{width:100%;font:inherit;font-size:17px;padding:11px 13px;border:1px solid #bfb7a6;background:#fff;color:var(--ink)}
+input[type=text]:focus,input[type=email]:focus,select:focus{outline:2px solid var(--green);outline-offset:0;border-color:var(--green)}
+.termo{background:#faf8f3;border:1px solid var(--line);border-left:4px solid var(--green);padding:16px 22px;font-size:16.5px}
 .termo ol{margin:0;padding-left:1.2em}
-.termo li{margin-bottom:.45em}
-.check{display:flex;gap:10px;align-items:flex-start;font-weight:600;margin-top:14px}
-.check input{width:20px;height:20px;margin-top:3px;flex:none}
-.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;padding:12px 22px;font:inherit;font-weight:700;cursor:pointer;background:var(--petrol);color:#fff}
-.btn:disabled{opacity:.45;cursor:not-allowed}
-.btn.sec{background:transparent;color:var(--petrol);border:1.5px solid var(--petrol)}
-.btn.red{background:var(--red)}
-.btn.link{background:none;color:var(--muted);padding:6px 0;font-weight:600;text-decoration:underline}
-.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:16px}
-.err{color:var(--red);font-weight:600;margin-top:10px}
+.termo li{margin-bottom:.5em}
+.check{display:flex;gap:12px;align-items:flex-start;margin-top:18px;font:600 17px var(--serif)}
+.check input{width:20px;height:20px;margin-top:4px;flex:none;accent-color:var(--green)}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--green);padding:12px 26px;font:600 16px var(--serif-d);letter-spacing:.04em;cursor:pointer;background:var(--green);color:#fff;transition:background .15s}
+.btn:hover:not(:disabled){background:#173229}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.sec{background:transparent;color:var(--green)}
+.btn.sec:hover:not(:disabled){background:var(--green-soft)}
+.btn.red{background:var(--red);border-color:var(--red)}
+.btn.link{background:none;border:0;color:var(--muted);padding:6px 0;font-weight:500;text-decoration:underline;letter-spacing:0}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:18px}
+.err{color:var(--red);font-weight:600;margin-top:12px}
 .ok{color:var(--green);font-weight:600}
 .hidden{display:none!important}
-video{width:100%;max-height:52vh;background:#0c1418;border-radius:12px;display:block}
-.rec{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:var(--red)}
-.rec i{width:12px;height:12px;border-radius:50%;background:var(--red);animation:pisca 1s infinite}
+video{width:100%;max-height:52vh;background:#141a19;display:block;border:1px solid var(--ink)}
+.rec{display:inline-flex;align-items:center;gap:8px;font-weight:600;color:var(--red)}
+.rec i{width:12px;height:12px;background:var(--red);animation:pisca 1s infinite}
 @keyframes pisca{50%{opacity:.25}}
-.passos{margin:0;padding-left:1.2em}
+.passos{margin:0 0 .8em;padding-left:1.2em}
 .passos li{margin-bottom:.35em}
-.barra{height:8px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:10px}
-.barra div{height:100%;width:0;background:var(--petrol);transition:width .3s}
+.barra{height:6px;background:var(--line);overflow:hidden;margin-top:12px}
+.barra div{height:100%;width:0;background:var(--green);transition:width .3s}
 
 /* prova */
-#prova{position:relative}
 .fixo{position:sticky;top:0;z-index:5}
-.topo{background:var(--petrol);color:#fff;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-weight:600;font-size:15px}
-.topo .tempo{font-variant-numeric:tabular-nums;background:rgba(255,255,255,.15);padding:4px 12px;border-radius:999px}
-.topo .tempo.fim{background:var(--red)}
-.faixa{background:var(--amber-soft);color:var(--amber);font-weight:600;font-size:14px;padding:8px 20px;text-align:center;border-bottom:1px solid #f0d98c}
+.topo{background:var(--green);color:#fff;padding:12px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px;font:600 16px var(--serif-d);border-bottom:3px solid var(--gold)}
+.topo .tempo{font-variant-numeric:tabular-nums;border:1px solid rgba(255,255,255,.5);padding:3px 14px}
+.topo .tempo.fim{background:var(--red);border-color:var(--red)}
+.faixa{background:var(--amber-soft);color:var(--amber);font-size:15px;font-style:italic;padding:8px 22px;text-align:center;border-bottom:1px solid #e7d39b}
 .questoes{position:relative;user-select:none;-webkit-user-select:none}
-.marca{position:absolute;inset:0;pointer-events:none;z-index:3;background-repeat:repeat;opacity:.11}
-.q{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;margin-bottom:16px;position:relative}
-.q .num{font-size:13px;font-weight:800;letter-spacing:.06em;color:var(--petrol);text-transform:uppercase;margin-bottom:6px}
-.q .enun{font-weight:600;margin-bottom:12px}
-.op{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:8px;cursor:pointer;background:#fbfcfc}
-.op:hover{border-color:var(--petrol)}
-.op input{margin-top:5px;flex:none;width:18px;height:18px;accent-color:var(--petrol)}
-.op .l{font-weight:800;color:var(--petrol);min-width:18px}
-.op.sel{border-color:var(--petrol);background:var(--petrol-soft)}
-.cortina{position:fixed;inset:0;z-index:50;background:rgba(12,24,28,.96);color:#fff;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center}
-.cortina .caixa{max-width:560px}
-.cortina h2{color:#fff;font-size:24px}
-.cortina p{color:#d9e4e7}
-.aviso{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:60;background:var(--red);color:#fff;font-weight:700;padding:12px 20px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.25);max-width:92vw;text-align:center;transition:opacity .3s}
-.modal{position:fixed;inset:0;z-index:70;background:rgba(12,24,28,.6);display:flex;align-items:center;justify-content:center;padding:20px}
-.modal .card{max-width:480px;margin:0}
-.status{font-size:13px;color:var(--muted);text-align:right;margin-top:8px}
+.marca{position:absolute;inset:0;pointer-events:none;z-index:3;background-repeat:repeat;opacity:.10}
+.q{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--rule);padding:26px 30px;margin-bottom:22px;position:relative}
+.q .num{font-family:var(--serif-d);font-size:13px;font-weight:600;letter-spacing:.16em;color:var(--terra);text-transform:uppercase;margin-bottom:8px}
+.q .enun{font-family:var(--serif);font-weight:600;font-size:18.5px;margin-bottom:16px}
+.op{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);padding:12px 16px;margin:0 0 9px;font:400 17.5px/1.55 var(--serif);cursor:pointer;background:#fdfcf9;transition:border-color .15s,background .15s}
+.op:hover{border-color:var(--green)}
+.op input{margin-top:6px;flex:none;width:17px;height:17px;accent-color:var(--green)}
+.op .l{font-family:var(--serif-d);font-weight:700;color:var(--green);min-width:20px}
+.op.sel,.op:has(input:checked){border-color:var(--green);box-shadow:inset 5px 0 0 var(--green);background:#e1ebe5}
+.cortina{position:fixed;inset:0;z-index:50;background:rgba(20,30,28,.97);color:#fff;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center}
+.cortina .caixa{max-width:560px;border-top:3px solid var(--gold);padding-top:22px}
+.cortina h2{color:#fff;font-size:30px}
+.cortina p{color:#dfe6e3}
+.cortina .btn{background:#fff;color:var(--green);border-color:#fff}
+.aviso{position:fixed;left:50%;top:20px;transform:translateX(-50%);z-index:60;background:var(--red);color:#fff;font:600 16px var(--serif-d);padding:13px 22px;box-shadow:0 10px 30px rgba(0,0,0,.22);max-width:92vw;text-align:center;transition:opacity .3s}
+.modal{position:fixed;inset:0;z-index:70;background:rgba(20,30,28,.6);display:flex;align-items:center;justify-content:center;padding:20px}
+.modal .card{max-width:500px;margin:0}
+.status{font-size:14px;color:var(--muted);text-align:right;margin-top:8px;font-style:italic}
+.rodape{text-align:center;font-size:14px;color:var(--muted);font-style:italic;margin-top:10px}
+@media (max-width:600px){h1{font-size:28px}.card,.q{padding:22px 18px}}
 @media print{body{display:none!important}}
 </style>
 </head>
@@ -80,14 +91,36 @@ video{width:100%;max-height:52vh;background:#0c1418;border-radius:12px;display:b
 
 <!-- 1. Identificação e termo -->
 <section id="t-ident" class="wrap">
+  <svg class="capa" viewBox="0 0 880 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ilustração: amanhecer sobre colinas com um ipê-amarelo">
+    <defs>
+      <linearGradient id="ceu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3dfb8"/><stop offset=".65" stop-color="#f6ead2"/><stop offset="1" stop-color="#efe6d3"/></linearGradient>
+    </defs>
+    <rect width="880" height="250" fill="url(#ceu)"/>
+    <circle cx="640" cy="150" r="62" fill="#e9b44c" opacity=".9"/>
+    <circle cx="640" cy="150" r="86" fill="#e9b44c" opacity=".18"/>
+    <g fill="#c99e7b" opacity=".55"><path d="M0 170 L120 120 L230 158 L360 104 L480 150 L600 112 L720 160 L880 118 L880 250 L0 250Z"/></g>
+    <g fill="#7f9b86"><path d="M0 196 L90 160 L210 188 L330 150 L470 192 L590 162 L720 196 L880 166 L880 250 L0 250Z"/></g>
+    <g fill="#3f6b5c"><path d="M0 222 L140 198 L300 220 L460 196 L620 222 L760 204 L880 220 L880 250 L0 250Z"/></g>
+    <rect y="236" width="880" height="14" fill="#22453c"/>
+    <g transform="translate(205 236)">
+      <path d="M-4 0 L-3 -62 L-14 -88 M-3 -62 L10 -96 M-3 -40 L-26 -60" stroke="#3b2b20" stroke-width="5" fill="none" stroke-linecap="square"/>
+      <g fill="#d9a521">
+        <circle cx="-16" cy="-96" r="22"/><circle cx="12" cy="-104" r="25"/><circle cx="-34" cy="-70" r="17"/><circle cx="30" cy="-84" r="18"/><circle cx="-2" cy="-122" r="19"/>
+      </g>
+      <g fill="#f0c64c"><circle cx="-6" cy="-108" r="10"/><circle cx="20" cy="-96" r="8"/><circle cx="-28" cy="-80" r="7"/></g>
+      <g fill="#d9a521" opacity=".8"><rect x="40" y="-14" width="4" height="4"/><rect x="58" y="-6" width="3" height="3"/><rect x="-40" y="-8" width="4" height="4"/></g>
+    </g>
+    <g stroke="#22453c" stroke-width="1.5" fill="none" opacity=".55"><path d="M500 70 q8 -7 16 0 q8 -7 16 0"/><path d="M548 52 q6 -5 12 0 q6 -5 12 0"/></g>
+  </svg>
   <div class="card">
+    <div class="kicker">Pós-graduação · Encontro síncrono</div>
     <h1>Avaliação do encontro síncrono</h1>
     <p class="ref">Artigo: Severiano AM, Souza Filho AA, Silva RCF, Correia IB. O método clínico centrado na pessoa: aprendizagem na residência em medicina de família e comunidade. Rev Bras Educ Med. 2026;50(1):e011.</p>
     <p>5 questões de múltipla escolha. Tempo: <b><span class="tempoTotal">30</span> minutos</b> a partir do início da prova.</p>
   </div>
 
   <div class="alerta">
-    <h2>⚠ Leia antes de começar</h2>
+    <h2>Leia antes de começar</h2>
     <ul>
       <li><b>Depois de iniciada a prova, você não pode sair desta página.</b> Trocar de aba, abrir outro programa, minimizar a janela ou sair da tela cheia é registrado com data, hora e duração e <b>comunicado automaticamente ao professor</b>, que poderá entender isso como uso de ferramenta de pesquisa.</li>
       <li>Copiar, colar e o botão direito do mouse ficam bloqueados. As tentativas também são registradas.</li>
@@ -97,6 +130,7 @@ video{width:100%;max-height:52vh;background:#0c1418;border-radius:12px;display:b
   </div>
 
   <div class="card">
+    <div class="kicker">Etapa 1 de 3</div>
     <h2>Identificação</h2>
     <label for="f-nome">Nome completo</label>
     <input id="f-nome" type="text" autocomplete="name" maxlength="120">
@@ -124,6 +158,7 @@ video{width:100%;max-height:52vh;background:#0c1418;border-radius:12px;display:b
 <!-- 2. Vídeo do ambiente -->
 <section id="t-video" class="wrap hidden">
   <div class="card">
+    <div class="kicker">Etapa 2 de 3</div>
     <h1>Vídeo do ambiente</h1>
     <p>Grave entre 20 e 60 segundos mostrando, devagar:</p>
     <ol class="passos">
@@ -157,8 +192,9 @@ video{width:100%;max-height:52vh;background:#0c1418;border-radius:12px;display:b
 
 <!-- 3. Pronto para começar -->
 <section id="t-pronto" class="wrap hidden">
+  <div class="kicker">Etapa 3 de 3</div>
   <div class="alerta">
-    <h2>⚠ A prova vai começar em tela cheia</h2>
+    <h2>A prova vai começar em tela cheia</h2>
     <ul>
       <li>A partir do clique em <b>Iniciar prova</b>, qualquer saída desta página é registrada e enviada ao professor na hora.</li>
       <li>Confira agora: câmera e microfone abertos na Conferência Web, notificações do computador silenciadas, celular longe do alcance.</li>
@@ -191,6 +227,7 @@ video{width:100%;max-height:52vh;background:#0c1418;border-radius:12px;display:b
 <!-- 5. Fim -->
 <section id="t-fim" class="wrap hidden">
   <div class="card">
+    <div class="kicker">Concluído</div>
     <h1>Prova enviada</h1>
     <p id="fim-txt">Suas respostas foram recebidas. Você já pode fechar esta página e voltar para a Conferência Web.</p>
   </div>
