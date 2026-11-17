@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Avaliação — MCCP na residência de MFC</title>
+<style>
+:root{
+  --bg:#f3f5f6; --card:#fff; --ink:#15303a; --ink2:#3b5560; --muted:#647a82; --line:#d5dfe3;
+  --petrol:#1d5261; --petrol-soft:#dcebef; --red:#b3261e; --red-soft:#fbe4e1; --amber:#8a5a00; --amber-soft:#fff2cc;
+  --green:#1f6f4a; --green-soft:#dcf0e5; --r:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16.5px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{min-height:100vh}
+h1,h2,h3{line-height:1.2;margin:0 0 .5em}
+h1{font-size:26px} h2{font-size:21px} h3{font-size:17px}
+p{margin:0 0 .8em}
+.wrap{max-width:860px;margin:0 auto;padding:28px 20px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px;margin-bottom:18px}
+.ref{font-size:14px;color:var(--muted)}
+.alerta{border:2px solid var(--red);background:var(--red-soft);border-radius:var(--r);padding:18px 20px;margin-bottom:18px}
+.alerta h2{color:var(--red);font-size:19px;display:flex;gap:10px;align-items:center}
+.alerta ul{margin:.4em 0 0;padding-left:1.2em}
+.alerta li{margin-bottom:.35em}
+label{display:block;font-weight:600;margin:12px 0 4px}
+input[type=text],input[type=email],select{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.termo{background:#fafbfb;border:1px solid var(--line);border-radius:10px;padding:14px 18px;font-size:15.5px}
+.termo ol{margin:0;padding-left:1.2em}
+.termo li{margin-bottom:.45em}
+.check{display:flex;gap:10px;align-items:flex-start;font-weight:600;margin-top:14px}
+.check input{width:20px;height:20px;margin-top:3px;flex:none}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;padding:12px 22px;font:inherit;font-weight:700;cursor:pointer;background:var(--petrol);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.sec{background:transparent;color:var(--petrol);border:1.5px solid var(--petrol)}
+.btn.red{background:var(--red)}
+.btn.link{background:none;color:var(--muted);padding:6px 0;font-weight:600;text-decoration:underline}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.err{color:var(--red);font-weight:600;margin-top:10px}
+.ok{color:var(--green);font-weight:600}
+.hidden{display:none!important}
+video{width:100%;max-height:52vh;background:#0c1418;border-radius:12px;display:block}
+.rec{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:var(--red)}
+.rec i{width:12px;height:12px;border-radius:50%;background:var(--red);animation:pisca 1s infinite}
+@keyframes pisca{50%{opacity:.25}}
+.passos{margin:0;padding-left:1.2em}
+.passos li{margin-bottom:.35em}
+.barra{height:8px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:10px}
+.barra div{height:100%;width:0;background:var(--petrol);transition:width .3s}
+
+/* prova */
+#prova{position:relative}
+.fixo{position:sticky;top:0;z-index:5}
+.topo{background:var(--petrol);color:#fff;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-weight:600;font-size:15px}
+.topo .tempo{font-variant-numeric:tabular-nums;background:rgba(255,255,255,.15);padding:4px 12px;border-radius:999px}
+.topo .tempo.fim{background:var(--red)}
+.faixa{background:var(--amber-soft);color:var(--amber);font-weight:600;font-size:14px;padding:8px 20px;text-align:center;border-bottom:1px solid #f0d98c}
+.questoes{position:relative;user-select:none;-webkit-user-select:none}
+.marca{position:absolute;inset:0;pointer-events:none;z-index:3;background-repeat:repeat;opacity:.11}
+.q{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;margin-bottom:16px;position:relative}
+.q .num{font-size:13px;font-weight:800;letter-spacing:.06em;color:var(--petrol);text-transform:uppercase;margin-bottom:6px}
+.q .enun{font-weight:600;margin-bottom:12px}
+.op{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:8px;cursor:pointer;background:#fbfcfc}
+.op:hover{border-color:var(--petrol)}
+.op input{margin-top:5px;flex:none;width:18px;height:18px;accent-color:var(--petrol)}
+.op .l{font-weight:800;color:var(--petrol);min-width:18px}
+.op.sel{border-color:var(--petrol);background:var(--petrol-soft)}
+.cortina{position:fixed;inset:0;z-index:50;background:rgba(12,24,28,.96);color:#fff;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center}
+.cortina .caixa{max-width:560px}
+.cortina h2{color:#fff;font-size:24px}
+.cortina p{color:#d9e4e7}
+.aviso{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:60;background:var(--red);color:#fff;font-weight:700;padding:12px 20px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.25);max-width:92vw;text-align:center;transition:opacity .3s}
+.modal{position:fixed;inset:0;z-index:70;background:rgba(12,24,28,.6);display:flex;align-items:center;justify-content:center;padding:20px}
+.modal .card{max-width:480px;margin:0}
+.status{font-size:13px;color:var(--muted);text-align:right;margin-top:8px}
+@media print{body{display:none!important}}
+</style>
+</head>
+<body>
+
+<!-- 1. Identificação e termo -->
+<section id="t-ident" class="wrap">
+  <div class="card">
+    <h1>Avaliação do encontro síncrono</h1>
+    <p class="ref">Artigo: Severiano AM, Souza Filho AA, Silva RCF, Correia IB. O método clínico centrado na pessoa: aprendizagem na residência em medicina de família e comunidade. Rev Bras Educ Med. 2026;50(1):e011.</p>
+    <p>5 questões de múltipla escolha. Tempo: <b><span class="tempoTotal">30</span> minutos</b> a partir do início da prova.</p>
+  </div>
+
+  <div class="alerta">
+    <h2>⚠ Leia antes de começar</h2>
+    <ul>
+      <li><b>Depois de iniciada a prova, você não pode sair desta página.</b> Trocar de aba, abrir outro programa, minimizar a janela ou sair da tela cheia é registrado com data, hora e duração e <b>comunicado automaticamente ao professor</b>, que poderá entender isso como uso de ferramenta de pesquisa.</li>
+      <li>Copiar, colar e o botão direito do mouse ficam bloqueados. As tentativas também são registradas.</li>
+      <li><b>Mantenha a câmera e o microfone abertos na Conferência Web durante toda a prova.</b></li>
+      <li>Antes da prova, você vai gravar um vídeo curto mostrando o ambiente onde está.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Identificação</h2>
+    <label for="f-nome">Nome completo</label>
+    <input id="f-nome" type="text" autocomplete="name" maxlength="120">
+    <label for="f-email">E-mail</label>
+    <input id="f-email" type="email" autocomplete="email" maxlength="120">
+    <label for="f-turma">Turma ou matrícula (opcional)</label>
+    <input id="f-turma" type="text" maxlength="60">
+
+    <h2 style="margin-top:24px">Termo de compromisso</h2>
+    <div class="termo">
+      <p>Declaro que:</p>
+      <ol>
+        <li>Farei esta avaliação sozinho(a), sem consultar pessoas, anotações, materiais, sites, aplicativos ou ferramentas de inteligência artificial, em nenhum dispositivo.</li>
+        <li>Manterei a câmera e o microfone abertos na sala da Conferência Web durante todo o período da prova.</li>
+        <li>Estou ciente de que, depois de iniciada a prova, sair desta página, trocar de aba, sair da tela cheia ou tentar copiar e colar será registrado e comunicado automaticamente ao professor, e que isso poderá ser entendido como uso de ferramenta de pesquisa.</li>
+        <li>Autorizo a gravação de um vídeo curto do meu ambiente de prova. O vídeo será usado apenas para esta avaliação, ficará acessível somente ao professor e será apagado ao fim do período de revisão das notas.</li>
+      </ol>
+    </div>
+    <label class="check"><input id="f-aceite" type="checkbox"> Li e aceito o termo de compromisso.</label>
+    <div class="row"><button id="b-ident" class="btn" disabled>Continuar</button></div>
+    <div id="e-ident" class="err hidden"></div>
+  </div>
+</section>
+
+<!-- 2. Vídeo do ambiente -->
+<section id="t-video" class="wrap hidden">
+  <div class="card">
+    <h1>Vídeo do ambiente</h1>
+    <p>Grave entre 20 e 60 segundos mostrando, devagar:</p>
+    <ol class="passos">
+      <li>a mesa inteira, incluindo o que está ao lado do teclado;</li>
+      <li>as laterais e o que está atrás da tela;</li>
+      <li>o restante do cômodo, girando o notebook ou a câmera;</li>
+      <li>que não há outro computador, tablet ou celular em uso por perto.</li>
+    </ol>
+    <p class="ref">O vídeo grava imagem e som. Se o seu computador tiver mais de uma câmera, escolha abaixo.</p>
+    <div id="sel-cam-box" class="hidden"><label for="sel-cam">Câmera</label><select id="sel-cam"></select></div>
+    <div style="margin-top:14px"><video id="v-ao-vivo" autoplay muted playsinline></video><video id="v-rever" class="hidden" controls playsinline></video></div>
+    <div class="row">
+      <button id="b-cam" class="btn">Ativar câmera</button>
+      <button id="b-gravar" class="btn red hidden">● Gravar</button>
+      <button id="b-parar" class="btn hidden">■ Parar</button>
+      <span id="rec" class="rec hidden"><i></i><span id="rec-t">0 s</span></span>
+      <button id="b-regravar" class="btn sec hidden">Gravar de novo</button>
+      <button id="b-enviar-video" class="btn hidden">Enviar vídeo e continuar</button>
+    </div>
+    <div id="up-box" class="hidden"><div class="barra"><div id="up-barra"></div></div><p class="ref" id="up-txt">Enviando o vídeo…</p></div>
+    <div id="e-video" class="err hidden"></div>
+    <div class="row"><button id="b-sem-cam" class="btn link hidden">Não consigo gravar o vídeo</button></div>
+    <div id="sem-cam-box" class="hidden termo" style="margin-top:10px">
+      <p><b>Seguir sem o vídeo.</b> O professor será avisado e poderá pedir que você mostre o ambiente ao vivo pela Conferência Web.</p>
+      <label for="f-motivo">O que aconteceu?</label>
+      <input id="f-motivo" type="text" maxlength="300" placeholder="Ex.: a câmera não liga, o navegador não pede permissão">
+      <div class="row"><button id="b-sem-cam-ok" class="btn sec">Seguir sem o vídeo</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Pronto para começar -->
+<section id="t-pronto" class="wrap hidden">
+  <div class="alerta">
+    <h2>⚠ A prova vai começar em tela cheia</h2>
+    <ul>
+      <li>A partir do clique em <b>Iniciar prova</b>, qualquer saída desta página é registrada e enviada ao professor na hora.</li>
+      <li>Confira agora: câmera e microfone abertos na Conferência Web, notificações do computador silenciadas, celular longe do alcance.</li>
+      <li>Não volte para a aba da Conferência Web durante a prova. Se precisar falar com o professor, fale pelo microfone.</li>
+      <li>Você terá <b><span class="tempoTotal">30</span> minutos</b>. Ao fim do tempo, as respostas marcadas são enviadas automaticamente.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="row" style="margin-top:0"><button id="b-iniciar" class="btn">Iniciar prova</button></div>
+    <div id="e-pronto" class="err hidden"></div>
+  </div>
+</section>
+
+<!-- 4. Prova -->
+<section id="t-prova" class="hidden">
+  <div class="fixo"><div class="topo"><span id="topo-nome"></span><span class="tempo" id="tempo">30:00</span></div>
+  <div class="faixa">Sair desta página, trocar de aba ou sair da tela cheia é registrado e comunicado ao professor.</div></div>
+  <div class="wrap">
+    <div class="questoes" id="questoes"><div class="marca" id="marca"></div></div>
+    <div class="card">
+      <div class="row" style="margin-top:0;justify-content:space-between">
+        <span id="contador" class="ref">0 de 5 respondidas</span>
+        <button id="b-entregar" class="btn">Enviar respostas</button>
+      </div>
+      <div class="status" id="status-envio"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Fim -->
+<section id="t-fim" class="wrap hidden">
+  <div class="card">
+    <h1>Prova enviada</h1>
+    <p id="fim-txt">Suas respostas foram recebidas. Você já pode fechar esta página e voltar para a Conferência Web.</p>
+  </div>
+</section>
+
+<!-- Cortina quando o aluno sai -->
+<div id="cortina" class="cortina hidden">
+  <div class="caixa">
+    <h2>Você saiu da prova</h2>
+    <p id="cortina-txt">Esta saída foi registrada com horário e duração e comunicada ao professor.</p>
+    <p>As questões ficam ocultas até você voltar.</p>
+    <button id="b-voltar" class="btn">Voltar para a prova em tela cheia</button>
+  </div>
+</div>
+
+<div id="aviso" class="aviso hidden"></div>
+
+<div id="modal" class="modal hidden">
+  <div class="card">
+    <h2>Enviar respostas?</h2>
+    <p id="modal-txt"></p>
+    <div class="row"><button id="m-sim" class="btn">Enviar</button><button id="m-nao" class="btn sec">Voltar à prova</button></div>
+  </div>
+</div>
+
+<script>
+/* ===================== Configuração ===================== */
+// Endereço do app da Web do Apps Script. Só é usado se esta página
+// estiver hospedada fora do Google. Servida pelo próprio script, pode ficar vazio.
+var API_URL = 'https://script.google.com/macros/s/AKfycbynVdq65VmSSqJDGr9Jo2hIoiid1G9nNolUI-NWvVjlGx7ZNjt08riVX0dWPAw79xdaFw/exec';
+var TEMPO_MIN = 30;
+var VIDEO_MIN_S = 20, VIDEO_MAX_S = 60;
+
+var QUESTOES = null; // carregadas do servidor depois do termo e do vídeo
+
+/* ===================== Estado ===================== */
+var S = {
+  fase:'identificacao', sid:null, nome:'', email:'', turma:'',
+  respostas:{}, ordem:null, fimEm:null, enviado:false,
+  foraDesde:null, foraMotivo:'', fila:[], fsOk:true, iniciou:false
+};
+var ultimoLog = {};
+var CHAVE = 'prova_mccp_v1';
+
+function $(id){ return document.getElementById(id); }
+function mostrar(id){ ['t-ident','t-video','t-pronto','t-prova','t-fim'].forEach(function(t){ $(t).classList.toggle('hidden', t!==id); }); window.scrollTo(0,0); }
+function agoraISO(){ return new Date().toISOString(); }
+function salvarLocal(){ try{ localStorage.setItem(CHAVE, JSON.stringify({sid:S.sid,nome:S.nome,email:S.email,turma:S.turma,respostas:S.respostas,ordem:S.ordem,fimEm:S.fimEm,fase:S.fase,enviado:S.enviado})); }catch(e){} }
+function lerLocal(){ try{ return JSON.parse(localStorage.getItem(CHAVE)||'null'); }catch(e){ return null; } }
+function novoSid(){ var a=new Uint8Array(6); (window.crypto||window.msCrypto).getRandomValues(a); return Array.prototype.map.call(a,function(b){return ('0'+b.toString(16)).slice(-2);}).join(''); }
+Array.prototype.forEach.call(document.querySelectorAll('.tempoTotal'),function(el){ el.textContent = TEMPO_MIN; });
+
+/* ===================== Comunicação com o servidor ===================== */
+function chamar(req){
+  return new Promise(function(ok, falha){
+    if (window.google && google.script && google.script.run){
+      google.script.run.withSuccessHandler(function(r){ try{ ok(JSON.parse(r)); }catch(e){ ok(r); } })
+        .withFailureHandler(function(e){ falha(e); }).api(JSON.stringify(req));
+    } else if (API_URL){
+      fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(req)})
+        .then(function(r){ return r.json(); }).then(ok).catch(falha);
+    } else if (window.API_SIMULADA){
+      window.API_SIMULADA(req).then(ok, falha);
+    } else {
+      falha(new Error('Servidor não configurado'));
+    }
+  });
+}
+
+function registrar(tipo, detalhe, duracao){
+  if (!S.sid) return;
+  S.fila.push({tipo:tipo, detalhe:detalhe||'', duracao:(duracao==null?null:duracao), horario:agoraISO()});
+  if (tipo==='saida' || S.fila.length>=5) despachar();
+}
+var despachando = false;
+function despachar(){
+  if (despachando || !S.fila.length || !S.sid) return;
+  despachando = true;
+  var lote = S.fila.splice(0, 50);
+  chamar({acao:'eventos', sid:S.sid, eventos:lote}).then(function(){
+    despachando = false; $('status-envio').textContent = '';
+    if (S.fila.length) despachar();
+  }, function(){
+    S.fila = lote.concat(S.fila); despachando = false;
+    $('status-envio').textContent = 'Sem conexão com o servidor. Os registros serão enviados quando a conexão voltar.';
+  });
+}
+setInterval(despachar, 5000);
+setInterval(function(){
+  if (!S.sid || S.enviado) return;
+  chamar({acao:'sinal', sid:S.sid, fase:S.fase, fora:!!S.foraDesde, respondidas:Object.keys(S.respostas).length}).catch(function(){});
+}, 30000);
+
+/* ===================== 1. Identificação ===================== */
+function validarIdent(){
+  var ok = $('f-nome').value.trim().length>=5 && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test($('f-email').value.trim()) && $('f-aceite').checked;
+  $('b-ident').disabled = !ok;
+}
+['f-nome','f-email','f-aceite'].forEach(function(id){ $(id).addEventListener('input', validarIdent); $(id).addEventListener('change', validarIdent); });
+
+$('b-ident').addEventListener('click', function(){
+  S.nome = $('f-nome').value.trim(); S.email = $('f-email').value.trim().toLowerCase(); S.turma = $('f-turma').value.trim();
+  S.sid = novoSid();
+  $('b-ident').disabled = true; $('e-ident').classList.add('hidden');
+  chamar({acao:'iniciar', sid:S.sid, nome:S.nome, email:S.email, turma:S.turma, navegador:navigator.userAgent, horario:agoraISO()})
+    .then(function(r){
+      if (!r || !r.ok) throw new Error((r&&r.erro)||'Falha ao registrar');
+      S.fase='video'; salvarLocal(); mostrar('t-video');
+      setTimeout(function(){ $('b-sem-cam').classList.remove('hidden'); }, 20000);
+    }).catch(function(e){
+      $('e-ident').textContent = 'Não foi possível registrar: ' + (e.message||e) + '. Verifique a internet e tente de novo.';
+      $('e-ident').classList.remove('hidden'); $('b-ident').disabled = false;
+    });
+});
+
+/* ===================== 2. Vídeo do ambiente ===================== */
+var fluxo=null, gravador=null, pedacos=[], blobVideo=null, tGravacao=0, relogioRec=null, mimeEscolhido='';
+
+function pararCamera(){ if (fluxo){ fluxo.getTracks().forEach(function(t){ t.stop(); }); fluxo=null; } }
+function erroVideo(msg){ $('e-video').textContent = msg; $('e-video').classList.remove('hidden'); $('b-sem-cam').classList.remove('hidden'); }
+
+function ligarCamera(deviceId){
+  pararCamera();
+  var c = {audio:true, video: deviceId ? {deviceId:{exact:deviceId}, width:{ideal:640}, height:{ideal:360}} : {width:{ideal:640}, height:{ideal:360}}};
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ erroVideo('Este navegador não permite acessar a câmera. Use o Google Chrome atualizado.'); return Promise.reject(); }
+  return navigator.mediaDevices.getUserMedia(c).then(function(st){
+    fluxo = st; $('v-ao-vivo').srcObject = st; $('v-ao-vivo').classList.remove('hidden'); $('v-rever').classList.add('hidden');
+    $('b-cam').classList.add('hidden'); $('b-gravar').classList.remove('hidden'); $('e-video').classList.add('hidden');
+    return navigator.mediaDevices.enumerateDevices().then(function(ds){
+      var cams = ds.filter(function(d){ return d.kind==='videoinput'; });
+      if (cams.length>1){
+        var sel=$('sel-cam'), atual = st.getVideoTracks()[0].getSettings().deviceId;
+        sel.innerHTML = cams.map(function(d,i){ return '<option value="'+d.deviceId+'"'+(d.deviceId===atual?' selected':'')+'>'+(d.label||('Câmera '+(i+1)))+'</option>'; }).join('');
+        $('sel-cam-box').classList.remove('hidden');
+      }
+    });
+  }).catch(function(e){
+    if (e && e.name==='NotAllowedError') erroVideo('O acesso à câmera foi negado. Clique no ícone de câmera na barra de endereço, permita o acesso e tente de novo.');
+    else if (e && (e.name==='NotReadableError'||e.name==='TrackStartError')) erroVideo('A câmera está em uso por outro programa. Se a Conferência Web estiver aberta em outro navegador ou aplicativo, desligue a câmera lá por um instante, grave o vídeo e ligue de novo.');
+    else if (e) erroVideo('Não foi possível ligar a câmera (' + (e.name||e) + ').');
+  });
+}
+$('b-cam').addEventListener('click', function(){ ligarCamera(); });
+$('sel-cam').addEventListener('change', function(){ ligarCamera(this.value); });
+
+function escolherMime(){
+  var ops=['video/webm;codecs=vp8,opus','video/webm','video/mp4;codecs=avc1,mp4a','video/mp4'];
+  for (var i=0;i<ops.length;i++){ if (window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(ops[i])) return ops[i]; }
+  return '';
+}
+$('b-gravar').addEventListener('click', function(){
+  if (!fluxo) return;
+  if (!window.MediaRecorder){ erroVideo('Este navegador não grava vídeo. Use o Google Chrome atualizado.'); return; }
+  pedacos=[]; mimeEscolhido = escolherMime();
+  try { gravador = new MediaRecorder(fluxo, mimeEscolhido ? {mimeType:mimeEscolhido, videoBitsPerSecond:450000, audioBitsPerSecond:48000} : undefined); }
+  catch(e){ gravador = new MediaRecorder(fluxo); }
+  gravador.ondataavailable = function(ev){ if (ev.data && ev.data.size) pedacos.push(ev.data); };
+  gravador.onstop = function(){
+    clearInterval(relogioRec); $('rec').classList.add('hidden');
+    blobVideo = new Blob(pedacos, {type: gravador.mimeType || mimeEscolhido || 'video/webm'});
+    pararCamera();
+    $('v-ao-vivo').classList.add('hidden');
+    var v=$('v-rever'); v.src = URL.createObjectURL(blobVideo); v.classList.remove('hidden');
+    $('b-parar').classList.add('hidden'); $('b-regravar').classList.remove('hidden');
+    if (tGravacao >= VIDEO_MIN_S){ $('b-enviar-video').classList.remove('hidden'); }
+    else { erroVideo('O vídeo ficou com ' + tGravacao + ' s. Grave pelo menos ' + VIDEO_MIN_S + ' s.'); }
+  };
+  gravador.start(1000); tGravacao=0; $('rec-t').textContent='0 s';
+  $('rec').classList.remove('hidden'); $('b-gravar').classList.add('hidden'); $('b-parar').classList.remove('hidden'); $('sel-cam-box').classList.add('hidden');
+  relogioRec = setInterval(function(){
+    tGravacao++; $('rec-t').textContent = tGravacao + ' s' + (tGravacao<VIDEO_MIN_S ? ' (mínimo '+VIDEO_MIN_S+' s)' : '');
+    if (tGravacao >= VIDEO_MAX_S) gravador.stop();
+  }, 1000);
+});
+$('b-parar').addEventListener('click', function(){ if (gravador && gravador.state==='recording') gravador.stop(); });
+$('b-regravar').addEventListener('click', function(){
+  $('b-regravar').classList.add('hidden'); $('b-enviar-video').classList.add('hidden'); $('e-video').classList.add('hidden');
+  ligarCamera($('sel-cam').value || undefined);
+});
+$('b-enviar-video').addEventListener('click', function(){
+  if (!blobVideo) return;
+  $('b-enviar-video').disabled = true; $('b-regravar').disabled = true; $('up-box').classList.remove('hidden');
+  var p=10, anima=setInterval(function(){ p=Math.min(92,p+3); $('up-barra').style.width=p+'%'; }, 400);
+  var leitor = new FileReader();
+  leitor.onload = function(){
+    var url = String(leitor.result), i = url.indexOf('base64,');
+    var b64 = i >= 0 ? url.slice(i + 7) : url.slice(url.lastIndexOf(',') + 1);
+    if (b64.length < 20000){
+      clearInterval(anima); $('up-box').classList.add('hidden'); $('b-enviar-video').disabled=false; $('b-regravar').disabled=false;
+      erroVideo('O vídeo ficou vazio. Clique em "Gravar de novo".'); return;
+    }
+    chamar({acao:'video', sid:S.sid, mime:blobVideo.type, segundos:tGravacao, dados:b64, horario:agoraISO()}).then(function(r){
+      if (!r || !r.ok) throw new Error((r&&r.erro)||'falha');
+      clearInterval(anima); $('up-barra').style.width='100%'; $('up-txt').textContent='Vídeo recebido.';
+      S.fase='pronto'; salvarLocal(); setTimeout(irParaPronto, 600);
+    }).catch(function(e){
+      clearInterval(anima); $('up-box').classList.add('hidden');
+      $('b-enviar-video').disabled=false; $('b-regravar').disabled=false;
+      erroVideo('O envio do vídeo falhou (' + (e.message||e) + '). Verifique a internet e clique em enviar de novo.');
+    });
+  };
+  leitor.readAsDataURL(blobVideo);
+});
+$('b-sem-cam').addEventListener('click', function(){ $('sem-cam-box').classList.remove('hidden'); });
+$('b-sem-cam-ok').addEventListener('click', function(){
+  pararCamera();
+  chamar({acao:'sem_video', sid:S.sid, motivo:$('f-motivo').value.trim(), horario:agoraISO()}).catch(function(){});
+  S.fase='pronto'; salvarLocal(); irParaPronto();
+});
+
+/* ===================== 3. Início da prova ===================== */
+function telaCheiaAtiva(){ return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+function pedirTelaCheia(){
+  var el=document.documentElement, f = el.requestFullscreen || el.webkitRequestFullscreen;
+  if (!f) return Promise.reject(new Error('sem suporte'));
+  try { var r = f.call(el, {navigationUI:'hide'}); return (r && r.then) ? r : Promise.resolve(); } catch(e){ return Promise.reject(e); }
+}
+function travarTeclado(){
+  if (navigator.keyboard && navigator.keyboard.lock){
+    navigator.keyboard.lock(['Escape','MetaLeft','MetaRight','AltLeft','Tab','F11']).catch(function(){});
+  }
+}
+
+
+function irParaPronto(){
+  mostrar('t-pronto');
+  if (QUESTOES) return;
+  var b=$('b-iniciar'); b.disabled=true; var txt=b.textContent; b.textContent='Carregando a prova…';
+  var tentar=function(n){
+    chamar({acao:'questoes', sid:S.sid}).then(function(r){
+      if (!r || !r.ok) throw new Error((r&&r.erro)||'falha');
+      QUESTOES = r.questoes; b.disabled=false; b.textContent=txt; $('e-pronto').classList.add('hidden');
+    }).catch(function(e){
+      if (n<4) setTimeout(function(){ tentar(n+1); }, 2500);
+      else { $('e-pronto').textContent='Não foi possível carregar a prova (' + (e.message||e) + '). Recarregue a página.'; $('e-pronto').classList.remove('hidden'); b.textContent=txt; }
+    });
+  };
+  tentar(1);
+}
+
+$('b-iniciar').addEventListener('click', function(){
+  if (!QUESTOES) return;
+  pedirTelaCheia().then(function(){ S.fsOk = true; travarTeclado(); comecarProva(); })
+    .catch(function(){
+      S.fsOk = false;
+      registrar('tela_cheia_indisponivel', 'O navegador não permitiu a tela cheia. Saídas de aba e de janela continuam registradas.');
+      comecarProva();
+    });
+});
+
+function montarQuestoes(){
+  if (!S.ordem){
+    var emb=function(a){ a=a.slice(); for (var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; };
+    S.ordem = emb(QUESTOES.map(function(q){return q.id;})).map(function(qid){
+      var q = QUESTOES.filter(function(x){return x.id===qid;})[0];
+      return {q:qid, ops:emb(q.ops.map(function(o){return o.id;}))};
+    });
+  }
+  var cont=$('questoes'), letras='abcde', html='';
+  S.ordem.forEach(function(item, i){
+    var q = QUESTOES.filter(function(x){return x.id===item.q;})[0];
+    html += '<div class="q"><div class="num">Questão '+(i+1)+'</div><div class="enun">'+q.enun+'</div>';
+    item.ops.forEach(function(oid, k){
+      var o = q.ops.filter(function(x){return x.id===oid;})[0];
+      var marcado = S.respostas[q.id]===oid;
+      html += '<label class="op'+(marcado?' sel':'')+'"><input type="radio" name="'+q.id+'" value="'+oid+'"'+(marcado?' checked':'')+'><span class="l">'+letras[k]+')</span><span>'+o.t+'</span></label>';
+    });
+    html += '</div>';
+  });
+  cont.innerHTML = '<div class="marca" id="marca"></div>' + html;
+  Array.prototype.forEach.call(cont.querySelectorAll('input[type=radio]'), function(r){
+    r.addEventListener('change', function(){
+      S.respostas[r.name] = r.value; salvarLocal(); atualizarContador();
+      Array.prototype.forEach.call(cont.querySelectorAll('input[name="'+r.name+'"]'), function(x){ x.parentNode.classList.toggle('sel', x.checked); });
+    });
+  });
+  desenharMarca(); atualizarContador();
+}
+function desenharMarca(){
+  var c=document.createElement('canvas'); c.width=420; c.height=220;
+  var g=c.getContext('2d'); g.translate(210,110); g.rotate(-0.42);
+  g.fillStyle='#15303a'; g.font='600 15px system-ui,sans-serif'; g.textAlign='center';
+  g.fillText(S.nome, 0, -8); g.fillText(S.email, 0, 14);
+  $('marca').style.backgroundImage='url('+c.toDataURL()+')';
+}
+function atualizarContador(){ $('contador').textContent = Object.keys(S.respostas).length + ' de 5 respondidas'; }
+
+var relogio=null;
+function comecarProva(){
+  S.fase='prova'; S.iniciou=true;
+  if (!S.fimEm) S.fimEm = Date.now() + TEMPO_MIN*60000;
+  salvarLocal();
+  $('topo-nome').textContent = S.nome;
+  montarQuestoes(); mostrar('t-prova');
+  registrar('inicio_prova', S.fsOk ? 'Prova iniciada em tela cheia' : 'Prova iniciada sem tela cheia');
+  despachar();
+  relogio = setInterval(tique, 1000); tique();
+  chamar({acao:'sinal', sid:S.sid, fase:'prova', fora:false, respondidas:Object.keys(S.respostas).length}).catch(function(){});
+}
+function tique(){
+  var rest = Math.max(0, Math.round((S.fimEm - Date.now())/1000));
+  var m=Math.floor(rest/60), s=rest%60;
+  $('tempo').textContent = (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  $('tempo').classList.toggle('fim', rest<=120);
+  if (rest===0 && !S.enviado){ clearInterval(relogio); entregar(true); }
+}
+
+/* ===================== Monitoramento de saídas ===================== */
+function dentro(){
+  return document.visibilityState==='visible' && document.hasFocus() && (!S.fsOk || telaCheiaAtiva());
+}
+function motivoAtual(){
+  if (document.visibilityState!=='visible') return 'trocou de aba, minimizou ou bloqueou a tela';
+  if (S.fsOk && !telaCheiaAtiva()) return 'saiu da tela cheia';
+  if (!document.hasFocus()) return 'clicou fora da janela da prova (outro programa ou janela)';
+  return 'saída';
+}
+function avaliar(){
+  if (S.fase!=='prova' || S.enviado) return;
+  if (!dentro()){
+    if (!S.foraDesde){
+      S.foraDesde = Date.now(); S.foraMotivo = motivoAtual();
+      $('questoes').style.visibility='hidden';
+      registrar('saida_inicio', S.foraMotivo);
+      despachar();
+    }
+    $('cortina').classList.remove('hidden');
+  } else if (S.foraDesde){
+    var dur = Math.round((Date.now()-S.foraDesde)/100)/10;
+    registrar('saida', S.foraMotivo, dur);
+    S.foraDesde=null; $('questoes').style.visibility='';
+    $('cortina').classList.add('hidden');
+    avisar('Sua saída de ' + dur.toLocaleString('pt-BR') + ' s foi registrada e comunicada ao professor.', 5000);
+  } else {
+    $('cortina').classList.add('hidden');
+  }
+}
+document.addEventListener('visibilitychange', avaliar);
+window.addEventListener('blur', function(){ setTimeout(avaliar, 50); });
+window.addEventListener('focus', function(){ setTimeout(avaliar, 50); });
+document.addEventListener('fullscreenchange', avaliar);
+document.addEventListener('webkitfullscreenchange', avaliar);
+setInterval(avaliar, 1000);
+
+$('b-voltar').addEventListener('click', function(){
+  if (S.fsOk && !telaCheiaAtiva()){ pedirTelaCheia().then(function(){ travarTeclado(); avaliar(); }).catch(function(){ avaliar(); }); }
+  else { window.focus(); avaliar(); }
+});
+
+function avisar(msg, ms){
+  var a=$('aviso'); a.textContent=msg; a.classList.remove('hidden'); a.style.opacity='1';
+  clearTimeout(a._t); a._t=setTimeout(function(){ a.style.opacity='0'; setTimeout(function(){ a.classList.add('hidden'); }, 300); }, ms||3500);
+}
+function logLimitado(tipo, det){
+  var t=Date.now(); if (ultimoLog[tipo] && t-ultimoLog[tipo]<2000) return; ultimoLog[tipo]=t; registrar(tipo, det);
+}
+
+/* ===================== Bloqueios ===================== */
+function bloquear(tipo, msg){
+  return function(e){
+    if (S.fase!=='prova' || S.enviado) return;
+    e.preventDefault();
+    avisar(msg); logLimitado(tipo, msg);
+  };
+}
+document.addEventListener('copy', bloquear('copiar', 'Copiar é proibido durante a prova. A tentativa foi registrada.'));
+document.addEventListener('cut', bloquear('recortar', 'Recortar é proibido durante a prova. A tentativa foi registrada.'));
+document.addEventListener('paste', bloquear('colar', 'Colar é proibido durante a prova. A tentativa foi registrada.'));
+document.addEventListener('contextmenu', bloquear('botao_direito', 'O botão direito está bloqueado durante a prova.'));
+document.addEventListener('dragstart', bloquear('arrastar', 'Arrastar texto está bloqueado durante a prova.'));
+document.addEventListener('selectstart', function(e){ if (S.fase==='prova' && !S.enviado) e.preventDefault(); });
+
+document.addEventListener('keydown', function(e){
+  if (S.fase!=='prova' || S.enviado) return;
+  var k=(e.key||'').toLowerCase(), mod=e.ctrlKey||e.metaKey;
+  if (mod && ['c','x','v','a','insert'].indexOf(k)>=0){ e.preventDefault(); avisar('Copiar e colar são proibidos durante a prova. A tentativa foi registrada.'); logLimitado('atalho_copiar_colar', 'Atalho '+(e.metaKey?'Cmd':'Ctrl')+'+'+k.toUpperCase()); return; }
+  if (mod && ['p','s','u','f','g'].indexOf(k)>=0){ e.preventDefault(); avisar('Este atalho está bloqueado durante a prova.'); logLimitado('tecla_bloqueada', 'Atalho '+(e.metaKey?'Cmd':'Ctrl')+'+'+k.toUpperCase()); return; }
+  if (k==='f12' || (mod && e.shiftKey && ['i','j','c'].indexOf(k)>=0)){ e.preventDefault(); logLimitado('tecla_bloqueada', 'Tentou abrir as ferramentas do navegador'); return; }
+  if (k==='escape'){ avisar('Atenção: sair da tela cheia será registrado e comunicado ao professor.', 3000); logLimitado('esc', 'Pressionou Esc'); }
+  if (k==='printscreen'){ logLimitado('print_screen', 'Tecla Print Screen'); }
+  if (e.shiftKey && e.metaKey && ['3','4','5','s'].indexOf(k)>=0){ logLimitado('print_screen', 'Atalho de captura de tela'); }
+});
+document.addEventListener('keyup', function(e){
+  if (S.fase!=='prova' || S.enviado) return;
+  if ((e.key||'').toLowerCase()==='printscreen'){
+    logLimitado('print_screen', 'Tecla Print Screen');
+    avisar('Captura de tela detectada e registrada.');
+    try{ navigator.clipboard.writeText(''); }catch(err){}
+  }
+});
+window.addEventListener('beforeunload', function(e){
+  if (S.fase==='prova' && !S.enviado){
+    registrar('tentou_fechar', 'Tentou fechar ou recarregar a página'); despacharUrgente();
+    e.preventDefault(); e.returnValue='';
+  }
+});
+function despacharUrgente(){
+  if (!S.fila.length) return;
+  if (API_URL && navigator.sendBeacon){
+    try{ navigator.sendBeacon(API_URL, new Blob([JSON.stringify({acao:'eventos', sid:S.sid, eventos:S.fila.splice(0)})], {type:'text/plain'})); }catch(e){}
+  } else { despachar(); }
+}
+
+/* ===================== Entrega ===================== */
+$('b-entregar').addEventListener('click', function(){
+  var n=Object.keys(S.respostas).length;
+  $('modal-txt').textContent = n<5 ? ('Você respondeu ' + n + ' de 5 questões. As questões em branco contam como erradas. Depois de enviar, não é possível alterar.') : 'Depois de enviar, não é possível alterar as respostas.';
+  $('modal').classList.remove('hidden');
+});
+$('m-nao').addEventListener('click', function(){ $('modal').classList.add('hidden'); });
+$('m-sim').addEventListener('click', function(){ $('modal').classList.add('hidden'); entregar(false); });
+
+function entregar(automatico){
+  if (S.enviado) return;
+  $('b-entregar').disabled = true; $('status-envio').textContent = 'Enviando…';
+  if (S.foraDesde){ registrar('saida', S.foraMotivo + ' (até o envio)', Math.round((Date.now()-S.foraDesde)/100)/10); S.foraDesde=null; }
+  var tentar = function(n){
+    var lote = S.fila.splice(0);
+    var antes = lote.length ? chamar({acao:'eventos', sid:S.sid, eventos:lote}).catch(function(){ S.fila = lote.concat(S.fila); }) : Promise.resolve();
+    antes.then(function(){
+      return chamar({acao:'enviar', sid:S.sid, respostas:S.respostas, automatico:!!automatico, horario:agoraISO()});
+    }).then(function(r){
+      if (!r || !r.ok) throw new Error((r&&r.erro)||'falha');
+      S.enviado=true; S.fase='enviada'; salvarLocal(); clearInterval(relogio);
+      $('cortina').classList.add('hidden');
+      if (navigator.keyboard && navigator.keyboard.unlock) navigator.keyboard.unlock();
+      if (telaCheiaAtiva()){ (document.exitFullscreen||document.webkitExitFullscreen).call(document); }
+      if (automatico) $('fim-txt').textContent = 'O tempo terminou e suas respostas foram enviadas automaticamente. Você já pode fechar esta página e voltar para a Conferência Web.';
+      mostrar('t-fim');
+    }).catch(function(e){
+      if (n<4){ $('status-envio').textContent = 'Falha no envio, tentando de novo…'; setTimeout(function(){ tentar(n+1); }, 3000); }
+      else { $('status-envio').textContent = 'Não foi possível enviar (' + (e.message||e) + '). Verifique a internet e clique em Enviar respostas de novo. Suas respostas continuam salvas nesta página.'; $('b-entregar').disabled=false; }
+    });
+  };
+  tentar(1);
+}
+
+/* ===================== Retomada após recarregar ===================== */
+(function(){
+  var d = lerLocal();
+  if (!d || !d.sid) return;
+  if (d.enviado){ mostrar('t-fim'); S.enviado=true; S.fase='enviada'; return; }
+  S.sid=d.sid; S.nome=d.nome; S.email=d.email; S.turma=d.turma; S.respostas=d.respostas||{}; S.ordem=d.ordem; S.fimEm=d.fimEm;
+  chamar({acao:'iniciar', sid:S.sid, nome:S.nome, email:S.email, turma:S.turma, navegador:navigator.userAgent, horario:agoraISO()}).catch(function(){});
+  if (d.fase==='video'){ S.fase='video'; mostrar('t-video'); $('b-sem-cam').classList.remove('hidden'); }
+  else { S.fase='pronto'; irParaPronto(); if (d.fase==='prova') $('b-iniciar').textContent='Retomar prova em tela cheia'; }
+})();
+</script>
+</body>
+</html>
